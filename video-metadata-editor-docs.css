@@ -1,0 +1,11 @@
+
+@import url(video-metadata-editor.css);
+
+header {
+  background: green;
+  color:white;
+}
+
+video-metadata-editor {
+  display: block;
+}

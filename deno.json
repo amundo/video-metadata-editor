@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "build": "pandoc -f markdown -t html --css video-metadata-editor-docs.css --section-divs --template=template.html -o video-metadata-editor-docs.html video-metadata-editor-docs.md"
+  }
+}
