@@ -1,6 +1,9 @@
-#metadata-form {
-  display: flex;
-  flex-direction: column;
+video-metadata-editor {
+  display: block;
+}
+
+video-metadata-editor form {
+  display: grid;
   align-items: center;
   padding: 20px;
   border: 2px dashed #ccc;
@@ -8,7 +11,17 @@
   min-height: 300px;
 }
 
-#dropzone {
+video-metadata-editor label {
+  display: flex;
+  align-items: center;
+  gap:1em;
+}
+
+video-metadata-editor label input {
+  flex:1;
+}
+
+video-metadata-editor .dropzone {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,11 +35,11 @@
   color: #ccc;
 }
 
-#dropzone.dragover {
+video-metadata-editor .dropzone.dragover {
   background-color: #eee;
 }
 
-input[type="text"] {
+video-metadata-editor input {
   margin: 10px 0;
   padding: 10px;
   border-radius: 5px;
@@ -36,11 +49,15 @@ input[type="text"] {
   box-sizing: border-box;
 }
 
-#custom-fields input[type="text"] {
+video-metadata-editor .custom-fields {
+ display: none;  
+}
+
+video-metadata-editor .custom-fields input[type="text"] {
   margin-bottom: 10px;
 }
 
-button[type="button"] {
+video-metadata-editor button {
   background-color: #4CAF50;
   color: white;
   border: none;
@@ -53,6 +70,6 @@ button[type="button"] {
   margin-bottom: 10px;
 }
 
-button[type="button"]:hover {
+video-metadata-editor button:hover {
   background-color: #3e8e41;
 }

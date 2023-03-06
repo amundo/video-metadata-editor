@@ -1,4 +1,4 @@
-let getMediaDuration = async file => new Promise((resolve, reject) => {
+let getMediaDuration = async file => new Promise((resolve, reject) => { 
   const video = document.createElement('video')
   video.preload = 'metadata'
   video.onloadedmetadata = () => {
@@ -17,88 +17,70 @@ export class VideoMetadataEditor extends HTMLElement {
   constructor() {
     super()
 
-    // Create form elements
-    const form = document.createElement("form")
-    form.classList.add('metadata-form')
+    this.innerHTML = `
+      <form class=metadata-form>
+        <label>Load file: <input type=file accept="video/*,audio/*"> <em>Or drop a file here.</em></label>
+        
+        <label>Title
+          <input name="video-title" type="text"  placeholder="Video title">
+        </label>
 
-    const dropzone = document.createElement("div")
-    dropzone.classList.add("dropzone")
+        <label>File name
+          <input name="file-name" type="text"  placeholder="File name">
+        </label>
 
-    const fileInput = document.createElement("input")
-    const fileName = document.createElement("input")
-    const title = document.createElement("input")
-    const duration = document.createElement("input")
-    const fileSize = document.createElement("input")
-    const customFields = document.createElement("div")
+        <label>File name
+          <input name="file-name" type="text"  placeholder="File name">
+        </label>
 
-    const addButton = document.createElement("button")
+        <label>Duration
+          <input name="duration" type="text"  placeholder="Duration (seconds)">
+        </label>
+
+        <label>File size
+          <input name="file-size" type="number"  placeholder="File size (bytes)">
+        </label>
+
+
+        <div class=custom-fields>
+          <button class=add-custom-field-button>+</button>
+          <fieldset></fieldset>
+        </div>
+      
+      </form>
+    `
+
+
+    this.form = this.querySelector("form")
+
+    this.dropzone = document.createElement("div")
+    this.dropzone.classList.add("dropzone")
+
+    this.fileInput      = this.querySelector("input[type=file]")
+    this.fileName       = this.querySelector("input[name=file-name]")
+    this.videoTitle     = this.querySelector("input[name=video-title]")
+    this.duration       = this.querySelector("input[name=duration]")
+    this.fileSize       = this.querySelector("input[name=file-size]")
+    this.customFields   = this.querySelector("div.custom-fields")
+
+    this.addButton = this.querySelector(".add-custom-field-button")
 
     
-
-    dropzone.addEventListener("dragover", (e) => {
-      e.preventDefault()
-      dropzone.classList.add("dragover")
-    })
-
-    dropzone.addEventListener("dragleave", () => {
-      dropzone.classList.remove("dragover")
-    })
-
-    dropzone.addEventListener("drop", async (e) => {
-      e.preventDefault()
-      dropzone.classList.remove("dragover")
-      const file = e.dataTransfer.files[0]
-      fileInput.files = e.dataTransfer.files
-      fileName.value = file.name
-      duration.value = await getMediaDuration(file)
-      fileSize.value = file.size
-    })
-
-    fileInput.setAttribute("type", "file")
-    fileInput.setAttribute("accept", "video/*")
-    fileInput.addEventListener("change", (e) => {
+    this.fileInput.addEventListener("change", (e) => {
       const file = e.target.files[0]
-      fileName.value = file.name
-      duration.value = file.duration
-      fileSize.value = file.size
+      this.fileName.value = file.name
+      this.duration.value = file.duration
+      this.fileSize.value = file.size
     })
 
-    fileName.setAttribute("type", "text")
-    fileName.setAttribute("placeholder", "File Name")
-
-    title.setAttribute("type", "text")
-    title.setAttribute("placeholder", "Title")
-
-    duration.setAttribute("type", "text")
-    // duration.setAttribute("readonly", true)
-    duration.setAttribute("placeholder", "Duration")
-
-    fileSize.setAttribute("type", "text")
-    // fileSize.setAttribute("readonly", true)
-    fileSize.setAttribute("placeholder", "File Size")
-
-    customFields.classList.add("custom-fields")
-
-    addButton.setAttribute("type", "button")
-    addButton.textContent = "Add Metadata Field"
-    addButton.addEventListener("click", () => {
+    this.addButton.addEventListener("click", () => {
       const field = document.createElement("input")
+      let label = document.createElement('label')
+
       field.setAttribute("type", "text")
       field.setAttribute("placeholder", "Custom Field")
-      customFields.appendChild(field)
+      this.customFields.appendChild(field)
     })
-
-    // Add form elements to form
-    dropzone.appendChild(fileInput)
-    form.appendChild(dropzone)
-    form.appendChild(fileName)
-    form.appendChild(title)
-    form.appendChild(duration)
-    form.appendChild(fileSize)
-    form.appendChild(customFields)
-    form.appendChild(addButton)
-
-    this.append(form)
 
     this.listen()
   }
@@ -114,8 +96,28 @@ export class VideoMetadataEditor extends HTMLElement {
   }
 
   listen() {
-    this.addEventListener("click", (clickEvent) => {
+    this.dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault()
+      this.dropzone.classList.add("dragover")
     })
+
+    this.dropzone.addEventListener("dragleave", () => {
+      this.dropzone.classList.remove("dragover")
+    })
+
+    this.dropzone.addEventListener("drop", async (e) => {
+      e.preventDefault()
+      this.dropzone.classList.remove("dragover")
+
+      const file = e.dataTransfer.files[0]
+
+      this.fileInput.files = e.dataTransfer.files
+      this.fileName.value = file.name
+      let duration = await getMediaDuration(file)
+      this.duration.value = duration
+      this.fileSize.value = file.size
+    })
+
   }
 }
 
